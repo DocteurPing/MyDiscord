@@ -12,27 +12,27 @@
 
 namespace Network {
     template<typename T>
-    struct messageHeader {
+    struct MessageHeader {
         T id{};
         uint32_t size = 0;
     };
 
     template<typename T>
-    struct message {
-        messageHeader<T> header{};
+    struct Message {
+        MessageHeader<T> header{};
         std::vector<uint8_t> body;
 
         [[nodiscard]] std::size_t size() const {
-            return sizeof(messageHeader<T>) + body.size();
+            return sizeof(MessageHeader<T>) + body.size();
         }
 
-        friend std::ostream &operator<<(std::ostream &os, const message<T> &msg) {
+        friend std::ostream &operator<<(std::ostream &os, const Message<T> &msg) {
             os << "Message Id:" << static_cast<int>(msg.header.id) << " Size:" << msg.header.size;
             return os;
         }
 
         template<typename DataType>
-        friend message<T> &operator<<(message<T> &msg, const DataType &data) {
+        friend Message<T> &operator<<(Message<T> &msg, const DataType &data) {
             static_assert(std::is_standard_layout<DataType>::value, "Cannot serialize the data");
             size_t i = msg.body.size();
             msg.body.resize(msg.body.size() + sizeof(DataType));
@@ -42,7 +42,7 @@ namespace Network {
         }
 
         template<typename DataType>
-        friend message<T> &operator>>(message<T> &msg, DataType &data) {
+        friend Message<T> &operator>>(Message<T> &msg, DataType &data) {
             static_assert(std::is_standard_layout<DataType>::value, "Cannot serialize the data");
             size_t i = msg.body.size() - sizeof(DataType);
             std::memcpy(&data, msg.body.data() + i, sizeof(DataType));
@@ -56,11 +56,11 @@ namespace Network {
     class Connection;
 
     template<typename T>
-    struct messageDest {
+    struct MessageDest {
         std::shared_ptr<Connection<T>> _remote = nullptr;
-        message<T> _msg;
+        Message<T> _msg;
 
-        friend std::ostream &operator<<(std::ostream &os, const messageDest<T> &msg) {
+        friend std::ostream &operator<<(std::ostream &os, const MessageDest<T> &msg) {
             os << msg.msg;
             return os;
         }

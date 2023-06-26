@@ -15,18 +15,22 @@ namespace Network {
     class Connection : public std::enable_shared_from_this<Connection<T>> {
     public:
         Connection() = default;
+
         ~Connection() = default;
 
         bool connectToServer();
+
         bool disconnect();
+
         bool isConnected() const;
-        bool send(const message<T> &msg);
+
+        bool send(const Message<T> &msg);
 
     protected:
         asio::ip::tcp::socket _socket;
         asio::io_context &_asioContext;
-        ThreadSafeQueue<message<T>> &msgOut;
-        ThreadSafeQueue<messageDest<T>> &msgIn;
+        ThreadSafeQueue<Message<T>> &msgOut;
+        ThreadSafeQueue<MessageDest<T>> &msgIn;
     };
 }
 

@@ -13,16 +13,18 @@
 namespace Network {
     template<typename T>
     class Client {
-        Client() : _socket(_context) {}
-        ~Client() {
-            disconnect();
-        }
+        Client();
+
+        ~Client();
 
     public:
         bool connect(const std::string &host, uint16_t port);
+
         void disconnect();
+
         bool isConnected();
-        ThreadSafeQueue<messageDest<T>> &getQueue();
+
+        ThreadSafeQueue<MessageDest<T>> &getQueue();
 
     protected:
         asio::io_context _context;
@@ -31,7 +33,7 @@ namespace Network {
         std::unique_ptr<Connection<T>> _connection;
 
     private:
-        ThreadSafeQueue<messageDest<T>> _msgIn;
+        ThreadSafeQueue<MessageDest<T>> _msgIn;
     };
 }
 

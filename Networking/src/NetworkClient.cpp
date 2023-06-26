@@ -5,12 +5,20 @@
 #include "../include/NetworkClient.h"
 
 template<typename T>
+Network::Client<T>::Client() : _socket(_context) {}
+
+template<typename T>
+Network::Client<T>::~Client() {
+    disconnect();
+}
+
+template<typename T>
 bool Network::Client<T>::connect(const std::string &host, const uint16_t port) {
     try {
         _connection = std::make_unique<Connection<T>>();
         asio::ip::tcp::resolver resolver(_context);
         auto endpoints = resolver.resolve(host, std::to_string(port));
-        _connection->connectTOServer(endpoints);
+        _connection->connectToServer(endpoints);
         _thread = std::thread([this]() { _context.run(); });
     } catch (std::exception &e) {
         std::cerr << "Couldn't connect to host: " << e.what() << std::endl;
@@ -37,6 +45,6 @@ bool Network::Client<T>::isConnected() {
 }
 
 template<typename T>
-Network::ThreadSafeQueue<Network::messageDest<T>> &Network::Client<T>::getQueue() {
+Network::ThreadSafeQueue<Network::MessageDest<T>> &Network::Client<T>::getQueue() {
     return _msgIn;
 }
