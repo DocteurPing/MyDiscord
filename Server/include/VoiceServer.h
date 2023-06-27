@@ -6,7 +6,7 @@
 #define MYDISCORD_VOICESERVER_H
 
 #include <cstdint>
-#include "../../Networking/include/NetworkServer.h"
+#include "../../Networking/include/NetworkServer.hpp"
 
 enum class ServerMsg : uint32_t {
     ServerAccept,

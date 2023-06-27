@@ -5,7 +5,7 @@
 #include "../include/VoiceServer.h"
 
 int main() {
-    VoiceServer server((uint16_t) 50000);
+    VoiceServer server(50000);
     server.start();
     while (1) {
         server.update();

@@ -7,8 +7,8 @@
 
 #include <memory>
 #include <asio.hpp>
-#include "NetworkQueue.h"
-#include "NetworkMessage.h"
+#include "NetworkQueue.hpp"
+#include "NetworkMessage.hpp"
 
 namespace Network {
     template<typename T>
