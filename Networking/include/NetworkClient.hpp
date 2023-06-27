@@ -9,20 +9,23 @@
 #include <iostream>
 #include "NetworkMessage.hpp"
 #include "NetworkQueue.hpp"
+#include "NetworkConnection.hpp"
 
 namespace Network {
     template<typename T>
     class Client {
+
+    public:
         Client() : _socket(_context) {}
 
         ~Client() { disconnect(); }
 
-    public:
         bool connect(const std::string &host, const uint16_t port) {
             try {
-                _connection = std::make_unique<Connection<T>>();
                 asio::ip::tcp::resolver resolver(_context);
-                auto endpoints = resolver.resolve(host, std::to_string(port));
+                asio::ip::tcp::resolver::results_type endpoints = resolver.resolve(host, std::to_string(port));
+                _connection = std::make_unique<Connection<T>>(Connection<T>::Owner::Client, _context,
+                                                              asio::ip::tcp::socket(_context), _msgIn);
                 _connection->connectToServer(endpoints);
                 _thread = std::thread([this]() { _context.run(); });
             } catch (std::exception &e) {

@@ -2,7 +2,7 @@
 // Created by drping on 6/26/23.
 //
 
-#include "../include/VoiceServer.h"
+#include "../include/VoiceServer.hpp"
 
 int main() {
     VoiceServer server(50000);

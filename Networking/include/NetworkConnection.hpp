@@ -26,7 +26,16 @@ namespace Network {
 
         ~Connection() = default;
 
-        bool connectToServer();
+        void connectToServer(const asio::ip::tcp::resolver::results_type &endpoints) {
+            if (_owner == Owner::Client) {
+                asio::async_connect(_socket, endpoints,
+                                    [this](std::error_code ec, const asio::ip::tcp::endpoint &endpoint) {
+                                        if (!ec) {
+                                            readHeader();
+                                        }
+                                    });
+            }
+        }
 
         void disconnect() {
             if (isConnected()) {
