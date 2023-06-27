@@ -30,12 +30,12 @@ namespace Network {
             return deqQueue.back();
         }
 
-        void push_back(T &item) {
+        void push_back(const T &item) {
             std::scoped_lock lock(muxQueue);
             deqQueue.push_back(std::move(item));
         }
 
-        void push_front(T &item) {
+        void push_front(const T &item) {
             std::scoped_lock lock(muxQueue);
             deqQueue.push_front(std::move(item));
         }

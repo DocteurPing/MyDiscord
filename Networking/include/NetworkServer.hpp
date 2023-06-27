@@ -11,6 +11,7 @@
 #include <iostream>
 #include "NetworkMessage.hpp"
 #include "NetworkQueue.hpp"
+#include "NetworkConnection.hpp"
 
 namespace Network {
     template<typename T>
@@ -44,13 +45,15 @@ namespace Network {
             this->_acceptor.async_accept([this](std::error_code ec, asio::ip::tcp::socket socket) {
                 if (!ec) {
                     std::cout << "[VoiceServer] new connection: " << socket.remote_endpoint() << std::endl;
-//            std::shared_ptr<Connection<T>> connection = std::make_shared<Connection<T>>(Connection<T>::owner::server, _context, std::move(socket), _msgIn);
-//            if (onClientConnect(connection)) {
-//                _connections.push_back(connection);
-//                _connections.back()->connectToClient(_idCounter++);
-//            } else {
-//                std::cerr << "[Sever] connection refused by the client" << std::endl;
-//            }
+                    std::shared_ptr<Connection<T>> connection = std::make_shared<Connection<T>>(
+                            Connection<T>::Owner::Server, _context, std::move(socket), _msgIn);
+                    if (onClientConnect(connection)) {
+                        _connections.push_back(connection);
+                        _connections.back()->connectToClient(_idCounter++);
+                        std::cout << "[VoiceServer] Connection approved: " << _connections.back()->getId() << std::endl;
+                    } else {
+                        std::cerr << "[Sever] connection refused by the client" << std::endl;
+                    }
                 } else {
                     std::cerr << "[VoiceServer] failed to connect new client " << ec.message() << std::endl;
                 }
