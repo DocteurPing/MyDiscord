@@ -54,6 +54,12 @@ namespace Network {
             return _msgIn;
         }
 
+        void send(Message<T> &msg) {
+            if (isConnected()) {
+                _connection->send(msg);
+            }
+        }
+
     protected:
         asio::io_context _context;
         std::thread _thread;

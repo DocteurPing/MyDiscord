@@ -9,6 +9,10 @@
 #include "../Shared/Messages.hpp"
 
 class VoiceClient : public Network::Client<CustomMsg> {
+public:
+    void pingServer();
+
+    void processMessages();
 };
 
 

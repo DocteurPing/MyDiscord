@@ -115,7 +115,7 @@ namespace Network {
         }
 
         void writeHeader() {
-            asio::async_write(_socket, asio::buffer(_msgOut.front().header, sizeof(MessageHeader<T>)),
+            asio::async_write(_socket, asio::buffer(&_msgOut.front().header, sizeof(MessageHeader<T>)),
                               [this](asio::error_code ec, std::size_t length) {
                                   if (!ec) {
                                       if (_msgOut.front().body.size() > 0) {

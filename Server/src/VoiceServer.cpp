@@ -14,4 +14,19 @@ void VoiceServer::onClientDisconnect(std::shared_ptr<Network::Connection<CustomM
 }
 
 void VoiceServer::onMessage(std::shared_ptr<Network::Connection<CustomMsg>> client, Network::Message<CustomMsg> &msg) {
+    switch (msg.header.id) {
+        case CustomMsg::ServerAccept:
+            break;
+        case CustomMsg::ServerDeny:
+            break;
+        case CustomMsg::ServerPing: {
+            std::cout << "[" << client->getId() << "]: Server Ping" << std::endl;
+            client->send(msg);
+            break;
+        }
+        case CustomMsg::MessageAll:
+            break;
+        case CustomMsg::ServerMessage:
+            break;
+    }
 }
